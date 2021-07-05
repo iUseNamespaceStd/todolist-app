@@ -6,7 +6,7 @@ const section = document.getElementById('section');
 const closeBtn = document.getElementById('close-btn');
 const userInput = document.getElementById('userInput');
 const addBtn = document.querySelector('.add');
-var container, taskText, checkbox, deleteTask;
+var container, taskText, checkbox, deleteTask, empty;
 
 // Show window for new task
 newTask.addEventListener("click", addNewTask);
@@ -14,8 +14,6 @@ newTask.addEventListener("click", addNewTask);
 closeBtn.addEventListener("click", closeNewTask);
 // Add new task
 addBtn.addEventListener("click", addTask);
-// Remove task
-// deleteTask.addEventListener("click", removeTask);
 
 // Show section
 function addNewTask() {
@@ -28,31 +26,47 @@ function closeNewTask() {
     userInput.value = "";
 }
 
-// On document load
-document.addEventListener('DOMContentLoaded', () => {
-    for (let task of tasks) {
-        container = document.createElement("div");
-        taskText = document.createElement("div");
-        checkbox = document.createElement("input");
-        deleteTask = document.createElement("div");
-        
-        container.className = "tasks";
 
-        taskText.innerHTML = task;
-        taskText.className = "wrapper";
+// Add container and append child for each task in array
+for (let task of tasks) {
+    container = document.createElement("div");
+    taskText = document.createElement("div");
+    checkbox = document.createElement("input");
+    deleteTask = document.createElement("div");
+    
+    container.className = "tasks";
 
-        checkbox.type = "checkbox";
-        checkbox.className = "status";
+    taskText.innerHTML = task;
+    taskText.className = "wrapper";
 
-        deleteTask.innerHTML = "x";
-        deleteTask.className = "delete-btn";
-        
-        document.querySelector('.list-container').appendChild(container);
-        container.appendChild(taskText);
-        container.appendChild(checkbox);
-        container.appendChild(deleteTask);
-    }
-})
+    checkbox.type = "checkbox";
+    checkbox.className = "status";
+
+    deleteTask.innerHTML = "x";
+    deleteTask.className = "delete-btn";
+    
+    document.querySelector('.list-container').appendChild(container);
+    container.appendChild(taskText);
+    container.appendChild(checkbox);
+    container.appendChild(deleteTask);
+}
+
+// Hide task when closed
+const close = document.getElementsByClassName('delete-btn');
+for (var i = 0; i < close.length; i++) {
+    close[i].addEventListener("click", function() {
+        var div = this.parentElement;
+        div.style.display = "none";   
+        tasks.splice(tasks[i], 1);
+        if (tasks.length === 0) {
+            empty = document.createElement("div");
+            empty.innerHTML = "You have no pending tasks.";
+            empty.className = "empty";
+            
+            document.querySelector('.list-container').appendChild(empty);
+       }
+    });
+}
 
 // Add new task to task list
 function addTask() {
@@ -61,6 +75,7 @@ function addTask() {
         container = document.createElement("div");
         taskText = document.createElement("div");
         checkbox = document.createElement("input");
+        deleteTask = document.createElement("div");
 
         container.className = "tasks";
 
@@ -70,15 +85,26 @@ function addTask() {
         checkbox.type = "checkbox";
         checkbox.className = "status";
 
+        deleteTask.innerHTML = "x";
+        deleteTask.className = "delete-btn";
+
         document.querySelector('.list-container').appendChild(container);
         container.appendChild(taskText);
         container.appendChild(checkbox);
+        container.appendChild(deleteTask);
+
+        console.log(tasks.length);
+        if (tasks.length > 0) {
+            empty.style.display = "none";
+        }
     }
     userInput.value = "";
-}
 
-function removeTask() {
-    // if (tasks.length > 0) {
-        
-    // }
+    for (var i = 0; i < close.length; i++) {
+        close[i].addEventListener("click", function() {
+            var div = this.parentElement;
+            div.style.display = "none";
+            tasks.length += 1;
+        });
+    }
 }
